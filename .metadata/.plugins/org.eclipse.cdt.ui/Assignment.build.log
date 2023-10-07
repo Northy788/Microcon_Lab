@@ -1,0 +1,40 @@
+13:21:13 **** Incremental Build of configuration Debug for project Assignment ****
+make -j8 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m7 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F767xx -c -I../Core/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F7xx/Include -I../Drivers/CMSIS/Include -I"/home/northy/STM32CubeIDE/MAD_Lab/Assignment/Drivers/ILI9341" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'Read_Controller':
+../Core/Src/main.c:306:15: warning: operation on 'player1.x' may be undefined [-Wsequence-point]
+  306 |     player1.x = (adc_val1 < 1000) ? player1.x += player_xVel : player1.x; // left
+      |     ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../Core/Src/main.c:307:15: warning: operation on 'player1.x' may be undefined [-Wsequence-point]
+  307 |     player1.x = (adc_val1 > 3000) ? player1.x -= player_xVel : player1.x; // right
+      |     ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../Core/Src/main.c:313:15: warning: operation on 'player2.x' may be undefined [-Wsequence-point]
+  313 |     player2.x = (adc_val2 < 1000) ? player2.x += player_xVel : player2.x; // left
+      |     ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../Core/Src/main.c:314:15: warning: operation on 'player2.x' may be undefined [-Wsequence-point]
+  314 |     player2.x = (adc_val2 > 3000) ? player2.x -= player_xVel : player2.x; // right
+      |     ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../Core/Src/main.c: In function 're_block':
+../Core/Src/main.c:334:25: warning: suggest parentheses around '&&' within '||' [-Wparentheses]
+  334 |   if ((player1.y == 92) && (player1.x >= 170 && player1.x <= 320) || (player2.y == 92) && (player2.x >= 170 && player2.x <= 320))
+      |       ~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../Core/Src/main.c:338:30: warning: suggest parentheses around '&&' within '||' [-Wparentheses]
+  338 |   else if ((player1.y == 92) && (player1.x >= 72 && player1.x <= 222) || (player2.y == 92) && (player2.x >= 72 && player2.x <= 222))
+      |            ~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../Core/Src/main.c:342:30: warning: suggest parentheses around '&&' within '||' [-Wparentheses]
+  342 |   else if ((player1.y == 32) && (player1.x >= 0 && player1.x <= 150) || (player2.y == 32) && (player2.x >= 0 && player2.x <= 150))
+      |            ~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+arm-none-eabi-gcc -o "Assignment.elf" @"objects.list"   -mcpu=cortex-m7 -T"/home/northy/STM32CubeIDE/MAD_Lab/Assignment/STM32F767ZITX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Assignment.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: Assignment.elf
+ 
+arm-none-eabi-size   Assignment.elf 
+arm-none-eabi-objdump -h -S  Assignment.elf  > "Assignment.list"
+   text	   data	    bss	    dec	    hex	filename
+  48000	    516	   2316	  50832	   c690	Assignment.elf
+Finished building: default.size.stdout
+ 
+Finished building: Assignment.list
+ 
+
+13:21:15 Build Finished. 0 errors, 7 warnings. (took 2s.205ms)
+

@@ -1,0 +1,26 @@
+#ifndef ILI9341_SPRITE_H
+#define ILI9341_SPRITE_H
+
+#include "ILI9341_GFX.h"
+#include "ILI9341_STM32_Driver.h"
+
+
+/*คุณสมบัติของ Sprite
+1. bitmap array ของ Sprite ตัวนั้นโดยจะเก็บเป็น array 1 มิติ
+2. ขนาดของ Sprite ตัวนั้น width x height
+3. ตำแหน่ง (x, y) บนหน้าจอของ Sprite ตัวนั้น
+*/
+typedef struct sprite_s
+{
+    /* data */
+    const uint16_t *bitmap; // bitmap RGB565
+    uint16_t width;         // ความกว้างของ sprite
+    uint16_t height;        // ความสูงของ sprite
+    uint16_t x;             // ตำแหน่งปัจจุบันในแกน x ของ sprite
+    uint16_t y;             // ตำแหน่งปัจจุบันในแกน y ของ sprite
+} Sprite;
+
+void ILI9341_Draw_Image_Burst(const uint16_t *SPRITE, uint16_t Size);
+void ILI9341_Draw_Sprite(const uint16_t *SPRITE, uint16_t WIDTH, uint16_t HEIGHT, uint16_t X, uint16_t Y);
+
+#endif

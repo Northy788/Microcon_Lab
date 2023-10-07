@@ -1,0 +1,2 @@
+../Drivers/ILI9341/ILI9341_Sprite.c:8:6:ILI9341_Draw_Image_Burst	160	dynamic
+../Drivers/ILI9341/ILI9341_Sprite.c:66:6:ILI9341_Draw_Sprite	32	static

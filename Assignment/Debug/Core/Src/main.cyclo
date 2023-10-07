@@ -1,0 +1,17 @@
+../Drivers/CMSIS/Include/core_cm7.h:2229:22:SCB_EnableICache	1
+../Drivers/CMSIS/Include/core_cm7.h:2281:22:SCB_EnableDCache	3
+../Core/Src/main.c:161:5:main	9
+../Core/Src/main.c:250:6:SystemClock_Config	4
+../Core/Src/main.c:301:6:Read_Controller	9
+../Core/Src/main.c:319:6:HAL_GPIO_EXTI_Callback	3
+../Core/Src/main.c:332:6:re_block	17
+../Core/Src/main.c:348:6:isCrashPaddle1	9
+../Core/Src/main.c:366:6:isCrashPaddle2	9
+../Core/Src/main.c:383:6:isFallPaddle1	9
+../Core/Src/main.c:399:6:isFallPaddle2	9
+../Core/Src/main.c:415:6:isCheckCrashPaddle	17
+../Core/Src/main.c:444:6:block_1	1
+../Core/Src/main.c:449:6:block_2	1
+../Core/Src/main.c:454:6:block_3	1
+../Core/Src/main.c:459:6:gavity	9
+../Core/Src/main.c:512:6:Error_Handler	1

@@ -1,0 +1,109 @@
+#include "ILI9341_Sprite.h"
+#include "stm32f7xx_hal.h"
+
+/*วาด SPRITE ซึ่งเป็น bitmap array 1 มิติ เก็บค่าสีขนาด 16-bits ของ pixels ต่าง ๆ
+จำนวน WIDTH x HEIGHT ค่า โดยวาดที่จุด (X, Y) ของหน้าจอ
+ตำแหน่ง (X, Y) จะอยู่ ณ จุดกึ่งกลางของภาพ
+*/
+//void ILI9341_Draw_Sprite(const uint16_t *SPRITE, uint16_t WIDTH, uint16_t HEIGHT, uint16_t X, uint16_t Y)
+//  {
+//      /*----หากึ่งกลางของภาพทั้งความกว้างความยาว----*/
+//      uint16_t half_height = (HEIGHT % 2) ? ((HEIGHT / 2) + 1) : (HEIGHT / 2);
+//      uint16_t half_width = (WIDTH % 2) ? ((WIDTH / 2) + 1) : (WIDTH / 2);
+//      /*----หากึ่งกลางของภาพทั้งความกว้างความยาว----*/
+//      uint16_t pixel = 0;
+//      //uint16_t pixel = (half_height * WIDTH) - 1; // index เริ่มต้นที่จะวาดใน SPRITE bitmap array 1 มิติ
+//
+//      // วาดภาพส่วนบน
+//      for (uint16_t y = HEIGHT - half_height; y > 0 ; y--)
+//      {
+//          // จากด้านขวามาถึงจุดกึ่งกลาง
+//          for (uint16_t x = WIDTH - half_width; x > 0; x--)
+//          {
+//              ILI9341_Draw_Pixel(X + x, Y + y, SPRITE[pixel++]);
+//          }
+//          // จากจุดกึ่งกลางไปด้านซ้าย
+//          for (uint16_t x = 0; x < half_width; x++)
+//          {
+//              ILI9341_Draw_Pixel(X - x, Y + y, SPRITE[pixel++]);
+//          }
+//      }
+//
+//      //pixel = (half_height * WIDTH); // index เริ่มต้นที่จะวาดใน SPRITE bitmap array 1 มิติ
+//      // วาดภาพส่วนล่าง
+//      for (uint16_t y = 0; y < half_height ; y++)
+//          {
+//              // จากด้านขวามาถึงจุดกึ่งกลาง
+//              for (uint16_t x = WIDTH - half_width; x > 0; x--)
+//              {
+//                  ILI9341_Draw_Pixel(X + x, Y - y, SPRITE[pixel++]);
+//              }
+//              // จากจุดกึ่งกลางไปด้านซ้าย
+//              for (uint16_t x = 0; x < half_width; x++)
+//              {
+//                  ILI9341_Draw_Pixel(X - x, Y - y, SPRITE[pixel++]);
+//              }
+//          }
+// }
+void ILI9341_Draw_Image_Burst(const uint16_t *SPRITE, uint16_t Size)
+{
+    // SEND Colours
+    uint16_t Buffer_Size = 0;
+    uint32_t pixels = 0;
+    if ((Size * 2) < BURST_MAX_SIZE)
+    {
+        Buffer_Size = Size;
+    }
+    else
+    {
+        Buffer_Size = BURST_MAX_SIZE;
+    }
+    HAL_GPIO_WritePin(LCD_DC_PORT, LCD_DC_PIN, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(LCD_CS_PORT, LCD_CS_PIN, GPIO_PIN_RESET);
+
+    uint32_t Sending_Size = Size;
+    uint32_t Sending_in_Block = Sending_Size / Buffer_Size;
+    uint32_t Remainder_from_block = Sending_Size % Buffer_Size;
+    uint16_t burst_buffer[Sending_in_Block][Buffer_Size];
+    uint16_t remaider_buffer[Remainder_from_block];
+    for (uint16_t i = 0; i < Sending_in_Block; i++)
+    {
+        for (uint16_t j = 0; j < Buffer_Size; j++)
+        {
+            burst_buffer[i][j] = SPRITE[pixels++];
+        }
+    }
+    uint16_t x = 0;
+    while (pixels < Sending_Size)
+    {
+        remaider_buffer[x] = SPRITE[pixels++];
+    }
+
+    if (Sending_in_Block != 0)
+    {
+        for (uint16_t i = 0; i < Sending_in_Block; i++)
+        {
+            //HAL_SPI_Transmit(&hspi5, &burst_buffer[i], Buffer_Size, 10);
+            HAL_SPI_Transmit(HSPI_INSTANCE, (uint8_t *)burst_buffer[i], Buffer_Size, 10);
+        }
+    }
+    HAL_SPI_Transmit(HSPI_INSTANCE, remaider_buffer, Remainder_from_block, 10);
+
+    HAL_GPIO_WritePin(LCD_CS_PORT, LCD_CS_PIN, GPIO_PIN_SET);
+}
+
+void ILI9341_Draw_Sprite(const uint16_t *SPRITE, uint16_t WIDTH, uint16_t HEIGHT, uint16_t X, uint16_t Y)
+{
+    if ((X >= ILI9341_SCREEN_WIDTH) || (Y >= ILI9341_SCREEN_HEIGHT))
+        return;
+    if ((X + WIDTH - 1) >= ILI9341_SCREEN_WIDTH)
+    {
+        WIDTH = ILI9341_SCREEN_WIDTH - X;
+    }
+    if ((Y + HEIGHT - 1) >= ILI9341_SCREEN_HEIGHT)
+    {
+        HEIGHT = ILI9341_SCREEN_HEIGHT - Y;
+    }
+    ILI9341_Set_Address(X, Y, X + WIDTH - 1, Y + HEIGHT - 1);
+    ILI9341_Draw_Image_Burst(SPRITE, WIDTH*HEIGHT);
+}
